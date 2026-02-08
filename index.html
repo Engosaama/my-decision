@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>قرار المهندس أسامة</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    /* تنسيقات أساسية */
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+        background:#0a0a0a;
+        color:white;
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        overflow:hidden; /* لمنع التمرير الجانبي */
+    }
+
+    /* تصميم الشرائح */
+    .slide{
+        display:none;
+        height:100vh;
+        width:100vw;
+        justify-content:center;
+        align-items:center;
+        text-align:center;
+        flex-direction:column;
+        padding: 20px;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .slide.active{
+        display:flex;
+        animation:fade 0.8s ease-in-out forwards;
+    }
+
+    @keyframes fade{
+        from{opacity:0; transform: translateY(10px);} 
+        to{opacity:1; transform: translateY(0);}
+    }
+
+    /* تصميم الزر */
+    #nextBtn{
+        position:fixed;
+        bottom:50px;
+        left:50%;
+        transform:translateX(-50%);
+        padding:15px 45px;
+        border:none;
+        border-radius:30px;
+        font-size:18px;
+        background-color: #00ff99; /* لون أخضر حيوي */
+        color: #000;
+        font-weight: bold;
+        cursor:pointer;
+        z-index: 1000;
+        box-shadow: 0 4px 20px rgba(0,255,153,0.3);
+        transition: 0.3s;
+    }
+    #nextBtn:active{ transform:translateX(-50%) scale(0.95); }
+
+    /* تصميم الصورة */
+    img{
+        width:200px;
+        height:200px;
+        border-radius:50%;
+        margin: 25px 0;
+        border:5px solid #00ff99;
+        object-fit: cover;
+        box-shadow: 0 0 20px rgba(0,255,153,0.2);
+    }
+
+    /* العداد */
+    .timer{
+        font-size:40px;
+        margin-top:20px;
+        color:#00ff99;
+        font-family: 'Courier New', monospace;
+        text-shadow: 0 0 10px rgba(0,255,153,0.4);
+        direction: ltr;
+        background: #1a1a1a;
+        padding: 10px 20px;
+        border-radius: 15px;
+    }
+
+    .label { font-size: 14px; color: #888; margin-top: 10px; letter-spacing: 2px; }
+    h1 { font-size: 2.2rem; margin-bottom: 15px; line-height: 1.4; }
+    p { color: #ccc; font-size: 1.1rem; }
+</style>
+</head>
+<body>
+
+    <div class="slide active">
+        <h1>بعد عناءٍ طويل…</h1>
+        <p>كان لا بد من وقفة مع النفس</p>
+    </div>
+
+    <div class="slide">
+        <h1>قررت أنا المهندس أسامة</h1>
+        <img src="osama.jpg" alt="المهندس أسامة">
+    </div>
+
+    <div class="slide">
+        <h1>أن أقطع الدخان نهائياً 🚭</h1>
+        <p>بداية حياة جديدة مليئة بالصحة</p>
+    </div>
+
+    <div class="slide">
+        <h2 style="margin-bottom:20px;">واليوم، وبفضل الله</h2>
+        <p>أنا بعيد عن السموم منذ:</p>
+        <div class="timer" id="timer">00:00:00:00</div>
+        <div class="label">يوم : ساعة : دقيقة : ثانية</div>
+    </div>
+
+    <button id="nextBtn">التالي</button>
+
+<script>
+    // التحكم في التنقل بين الشرائح
+    let current = 0;
+    const slides = document.querySelectorAll(".slide");
+    const btn = document.getElementById("nextBtn");
+
+    btn.addEventListener("click", function() {
+        if (current < slides.length - 1) {
+            slides[current].classList.remove("active");
+            current++;
+            slides[current].classList.add("active");
+        }
+        
+        // إخفاء الزر عند الوصول للشريحة الأخيرة
+        if (current === slides.length - 1) {
+            btn.style.display = "none";
+        }
+    });
+
+    // منطق العداد الزمني
+    // تاريخ الإقلاع: 5 فبراير 2026، الساعة 11 مساءً
+    const quitDate = new Date("2026-02-05T23:00:00").getTime(); 
+
+    function updateTimer(){
+        const now = new Date().getTime();
+        const diff = now - quitDate;
+
+        if (diff > 0) {
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById("timer").textContent = 
+                String(d).padStart(2,"0") + ":" +
+                String(h).padStart(2,"0") + ":" +
+                String(m).padStart(2,"0") + ":" +
+                String(s).padStart(2,"0");
+        } else {
+            document.getElementById("timer").textContent = "00:00:00:00";
+        }
+    }
+
+    // تحديث كل ثانية
+    setInterval(updateTimer, 1000);
+    updateTimer(); // تشغيل فوري عند التحميل
+</script>
+
+</body>
+</html>
